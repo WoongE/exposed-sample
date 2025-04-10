@@ -3,10 +3,8 @@ package kim.wonung.exposed_example.persistence
 import kim.wonung.exposed_example.domain.Sample
 import kim.wonung.exposed_example.domain.SampleId
 import kim.wonung.exposed_example.domain.SampleRepository
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.andWhere
-import org.jetbrains.exposed.sql.insertReturning
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
@@ -31,6 +29,19 @@ class SampleRepositoryImpl : SampleRepository {
             it[name] = sample.name
             it[description] = sample.description
         }.single().toSample()
+
+    @Transactional
+    override fun update(sample: Sample): Sample? =
+        SamplesTable.updateReturning(where = { SamplesTable.id eq sample.id.value }) {
+            it[name] = sample.name
+            it[description] = sample.description
+        }.singleOrNull()?.toSample()
+
+    @Transactional
+    override fun delete(id: SampleId): Boolean {
+        val deletedCount = SamplesTable.deleteWhere { SamplesTable.id eq id.value }
+        return deletedCount > 0
+    }
 
     private fun ResultRow.toSample() = Sample(
         id = SampleId(this[SamplesTable.id].value),

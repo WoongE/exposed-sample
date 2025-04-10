@@ -34,4 +34,21 @@ class HelloController(
         )
         return sampleRepository.create(sample)
     }
+
+    @GetMapping("/update-samples/{id}")
+    fun updateSample(
+        @PathVariable id: String,
+        @RequestParam name: String,
+        @RequestParam description: String,
+    ): Sample? {
+        val sample = sampleRepository.findById(SampleId(UUID.fromString(id)))
+            ?: throw IllegalArgumentException("Sample not found with id: $id")
+        sample.name = name
+        sample.description = description
+        return sampleRepository.update(sample)
+    }
+
+    @GetMapping("/delete-samples/{id}")
+    fun deleteSample(@PathVariable id: String): Boolean =
+        sampleRepository.delete(SampleId(UUID.fromString(id)))
 }
