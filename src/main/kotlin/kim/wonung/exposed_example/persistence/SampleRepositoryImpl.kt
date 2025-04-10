@@ -7,6 +7,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.time.OffsetDateTime
 
 @Transactional(readOnly = true)
 @Repository
@@ -43,9 +44,46 @@ class SampleRepositoryImpl : SampleRepository {
         return deletedCount > 0
     }
 
+    override fun findAll2(): List<Sample> =
+        SampleEntity.find { SamplesTable.deletedAt.isNull() }
+            .map { it.toSample() }
+
+    override fun findById2(id: SampleId): Sample? =
+        SampleEntity.find { (SamplesTable.id eq id.value) and (SamplesTable.deletedAt.isNull()) }
+            .firstOrNull()
+            ?.toSample()
+
+    @Transactional
+    override fun create2(sample: Sample): Sample =
+        SampleEntity.new(sample.id.value) {
+            name = sample.name
+            description = sample.description
+        }.toSample()
+
+    @Transactional
+    override fun update2(sample: Sample): Sample? =
+        SampleEntity.findByIdAndUpdate(sample.id.value) { entity ->
+            entity.name = sample.name
+            entity.description = sample.description
+            entity.updatedAt = OffsetDateTime.now()
+        }?.toSample()
+
+    @Transactional
+    override fun delete2(id: SampleId): Boolean {
+        val sampleEntity = SampleEntity.findById(id.value) ?: return false
+        sampleEntity.delete()
+        return true
+    }
+
     private fun ResultRow.toSample() = Sample(
         id = SampleId(this[SamplesTable.id].value),
         name = this[SamplesTable.name],
         description = this[SamplesTable.description],
+    )
+
+    private fun SampleEntity.toSample() = Sample(
+        id = SampleId(this.id.value),
+        name = this.name,
+        description = this.description,
     )
 }

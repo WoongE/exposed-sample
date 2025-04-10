@@ -21,7 +21,7 @@ class HelloController(
 
     @GetMapping("/samples/{id}")
     fun getSampleById(@PathVariable id: String): Sample =
-        sampleRepository.findById(SampleId(UUID.fromString(id)))
+        sampleRepository.findById2(SampleId(UUID.fromString(id)))
             ?: throw IllegalArgumentException("Sample not found with id: $id")
 
     @GetMapping("/create-samples")
@@ -34,7 +34,7 @@ class HelloController(
             name = name,
             description = description,
         )
-        return sampleRepository.create(sample)
+        return sampleRepository.create2(sample)
     }
 
     @GetMapping("/update-samples/{id}")
@@ -47,10 +47,10 @@ class HelloController(
             ?: throw IllegalArgumentException("Sample not found with id: $id")
         sample.name = name
         sample.description = description
-        return sampleRepository.update(sample)
+        return sampleRepository.update2(sample)
     }
 
     @GetMapping("/delete-samples/{id}")
     fun deleteSample(@PathVariable id: String): Boolean =
-        sampleRepository.delete(SampleId(UUID.fromString(id)))
+        sampleRepository.delete2(SampleId(UUID.fromString(id)))
 }
