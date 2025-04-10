@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: exposed-example
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/kim_wonung
+    username: kimwonung
+    password: kimwonung
+
+logging.level.org.jooq.tools.LoggerListener: DEBUG
