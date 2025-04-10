@@ -20,7 +20,9 @@ class HelloController(
     fun getSamples(): List<Sample> = sampleRepository.findAll()
 
     @GetMapping("/samples/{id}")
-    fun getSampleById(@PathVariable id: String): Sample? = sampleRepository.findById(SampleId(UUID.fromString(id)))
+    fun getSampleById(@PathVariable id: String): Sample =
+        sampleRepository.findById(SampleId(UUID.fromString(id)))
+            ?: throw IllegalArgumentException("Sample not found with id: $id")
 
     @GetMapping("/create-samples")
     fun createSample(

@@ -5,6 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import java.util.*
 
+//@ImportAutoConfiguration(
+//    value = [ExposedAutoConfiguration::class],
+//    exclude = [DataSourceTransactionManagerAutoConfiguration::class]
+//)
 @SpringBootApplication
 class ExposedExampleApplication {
     @PostConstruct

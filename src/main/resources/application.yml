@@ -6,6 +6,8 @@ spring:
   threads:
     virtual:
       enabled: true # Java 21 virtual threads ??
+  exposed:
+    show-sql: true
 
 server:
   shutdown: graceful
@@ -21,7 +23,6 @@ spring:
     password: kimwonung
 
 server.port: 8080
-logging.level.org.jooq.tools.LoggerListener: DEBUG
 
 ---
 spring:
