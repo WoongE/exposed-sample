@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: exposed-example
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  threads:
+    virtual:
+      enabled: true # Java 21 virtual threads ??
+
+server:
+  shutdown: graceful
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kim_wonung
+    username: kimwonung
+    password: kimwonung
+
+server.port: 8080
+logging.level.org.jooq.tools.LoggerListener: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kim_wonung
+    username: kimwonung
+    password: kimwonung
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: TBD
+    username: TBD
+    password: TBD
